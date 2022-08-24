@@ -1,0 +1,56 @@
+# Scalar Types
+scalar DateTime
+scalar BigDecimal
+
+type Customer {
+	 customerId: ID!
+	 firstName: String
+	 lastName: String
+}
+
+type Account {
+	accountId: ID!
+	type: String
+	balance: BigDecimal
+}
+
+type Transaction {
+   transactionId: ID!
+   accountId: Int
+   customerId: Int
+   type: String
+   amount: BigDecimal
+   balance: BigDecimal
+   description: String
+   transactionDateTime: String
+}
+
+type Query {
+	 customers: [Customer]
+	 accounts: [Account]
+	 transactions(input: TransactionSearchInput): [Transaction]
+}
+
+type Mutation {
+ 	createCustomer(input: CreateCustomerInput): Customer
+ 	createAccount(input: CreateAccountInput): Account
+}
+
+input TransactionSearchInput {
+   accountId: Int
+   customerId: Int
+}
+
+input CreateCustomerInput {
+  firstName: String
+  lastName: String
+}
+
+input CreateAccountInput {
+  type: String
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}
