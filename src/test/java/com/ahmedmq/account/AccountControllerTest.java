@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.ahmedmq.config.GraphQLConfig;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
 
+import static com.ahmedmq.account.AccountType.SAVINGS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -30,7 +30,7 @@ public class AccountControllerTest {
 	@MockBean
 	AccountService accountService;
 
-	Account TEST_ACCOUNT = new Account(1, "SAVINGS", BigDecimal.valueOf(20.0));
+	Account TEST_ACCOUNT = new Account(1, SAVINGS, BigDecimal.valueOf(20.0));
 
 	@Test
 	void should_Return_All_Accounts() {
@@ -82,7 +82,7 @@ public class AccountControllerTest {
 				.satisfies(account -> {
 					assertThat(account.getAccountId()).isNotNull();
 					assertThat(account.getBalance()).isEqualTo(TEST_ACCOUNT.getBalance());
-					assertThat(account.getType()).isEqualTo("SAVINGS");
+					assertThat(account.getType()).isEqualTo(TEST_ACCOUNT.getType());
 				});
 	}
 }

@@ -1,13 +1,10 @@
 package com.ahmedmq.customer;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.ahmedmq.config.GraphQLConfig;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.GraphQlTest;

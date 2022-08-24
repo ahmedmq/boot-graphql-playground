@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureH
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 
+import static com.ahmedmq.account.AccountType.SAVINGS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -43,7 +44,7 @@ public class AccountControllerIntTest {
 				}
 				""";
 
-		accountRepository.save(new Account(null, "SAVINGS", BigDecimal.valueOf(0.0)));
+		accountRepository.save(new Account(null, SAVINGS, BigDecimal.valueOf(0.0)));
 
 		httpGraphQlTester.document(document)
 				.execute()
@@ -51,7 +52,7 @@ public class AccountControllerIntTest {
 				.entity(Account.class)
 				.satisfies(account -> {
 					assertThat(account.getAccountId()).isEqualTo(1);
-					assertThat(account.getType()).isEqualTo("SAVINGS");
+					assertThat(account.getType()).isEqualTo(SAVINGS);
 					assertThat(account.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
 				});
 	}
@@ -80,7 +81,7 @@ public class AccountControllerIntTest {
 				.satisfies(account -> {
 					assertThat(account.getAccountId()).isNotNull();
 					assertThat(account.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
-					assertThat(account.getType()).isEqualTo("SAVINGS");
+					assertThat(account.getType()).isEqualTo(SAVINGS);
 				});
 
 	}

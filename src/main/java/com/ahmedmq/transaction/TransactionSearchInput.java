@@ -14,4 +14,7 @@ public class TransactionSearchInput {
 
 	Integer accountId;
 
+	Integer page;
+
+	Integer pageSize;
 }

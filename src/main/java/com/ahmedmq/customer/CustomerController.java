@@ -1,8 +1,6 @@
 package com.ahmedmq.customer;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;

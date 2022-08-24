@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 
+import static com.ahmedmq.transaction.TransactionType.DEPOSIT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -42,6 +43,8 @@ public class TransactionControllerIntTest {
 		Map<String, Object> transactionSearchInput = new HashMap<>();
 		transactionSearchInput.put("accountId", 1);
 		transactionSearchInput.put("customerId", null);
+		transactionSearchInput.put("page", 0);
+		transactionSearchInput.put("pageSize", 2);
 
 		httpGraphQlTester.document(document)
 				.variable("input", transactionSearchInput)
@@ -52,7 +55,7 @@ public class TransactionControllerIntTest {
 					assertThat(transaction.getTransactionId()).isEqualTo(1);
 					assertThat(transaction.getAccountId()).isEqualTo(1);
 					assertThat(transaction.getCustomerId()).isEqualTo(1);
-					assertThat(transaction.getType()).isEqualTo("DEPOSIT");
+					assertThat(transaction.getType()).isEqualTo(DEPOSIT);
 					assertThat(transaction.getAmount()).isEqualTo(BigDecimal.valueOf(10.0));
 					assertThat(transaction.getBalance()).isEqualTo(BigDecimal.valueOf(10.0));
 					assertThat(transaction.getTransactionDateTime()).isNotNull();

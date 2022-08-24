@@ -10,7 +10,7 @@ type Customer {
 
 type Account {
 	accountId: ID!
-	type: String
+	type: AccountType
 	balance: BigDecimal
 }
 
@@ -18,7 +18,7 @@ type Transaction {
    transactionId: ID!
    accountId: Int
    customerId: Int
-   type: String
+   type: TransactionType
    amount: BigDecimal
    balance: BigDecimal
    description: String
@@ -39,18 +39,33 @@ type Mutation {
 input TransactionSearchInput {
    accountId: Int
    customerId: Int
+   page: Int = 0
+   pageSize: Int = 20
 }
 
 input CreateCustomerInput {
-  firstName: String
-  lastName: String
+  firstName: String!
+  lastName: String!
+}
+
+enum AccountType {
+   	SAVINGS,
+   	CURRENT
+}
+
+enum TransactionType{
+ 	DEPOSIT,
+ 	WITHDRAW
 }
 
 input CreateAccountInput {
-  type: String
+  type: AccountType
 }
 
+# GraphQL Schema
 schema {
+	# GraphQL query to fetch data
 	query: Query
+	# GraphQL query to update data
 	mutation: Mutation
 }

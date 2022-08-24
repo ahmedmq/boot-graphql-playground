@@ -1,14 +1,11 @@
 package com.ahmedmq.transaction;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
-
-import javax.persistence.criteria.Predicate;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +16,11 @@ public class TransactionService {
 	private final TransactionRepository transactionRepository;
 
 	public List<Transaction> transactions(TransactionSearchInput transactionSearchInput) {
-		return transactionRepository.findAll(getSpecificationFromTransactionInput(transactionSearchInput));
+		PageRequest pageRequest = PageRequest.of(transactionSearchInput.getPage(),
+				transactionSearchInput.getPageSize());
+		return transactionRepository
+				.findAll(getSpecificationFromTransactionInput(transactionSearchInput), pageRequest)
+				.stream().collect(Collectors.toList());
 	}
 
 	private Specification<Transaction> getSpecificationFromTransactionInput(TransactionSearchInput transactionSearchInput){

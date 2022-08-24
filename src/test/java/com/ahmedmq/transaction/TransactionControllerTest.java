@@ -47,7 +47,7 @@ public class TransactionControllerTest {
 							}      
 				""";
 
-		Transaction testTransaction = new Transaction(1, 1, 1, "DEPOSIT", BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now());
+		Transaction testTransaction = new Transaction(1, 1, 1, TransactionType.DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now());
 		when(transactionService.transactions(any()))
 				.thenReturn(List.of(testTransaction));
 

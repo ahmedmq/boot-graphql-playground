@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -25,7 +27,8 @@ public class Transaction {
 
 	Integer customerId;
 
-	String type;
+	@Enumerated(EnumType.STRING)
+	TransactionType type;
 
 	BigDecimal amount;
 
