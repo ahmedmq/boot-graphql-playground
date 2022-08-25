@@ -19,6 +19,11 @@ public class AccountService {
 	}
 
 	public Account createAccount(CreateAccountInput input) {
-		return accountRepository.save(new Account(null, input.getType(), BigDecimal.valueOf(0.0)));
+		return accountRepository.save(new Account(input.getType(), BigDecimal.valueOf(0.0)));
+	}
+
+	public Account account(Integer accountId) throws AccountNotFoundException {
+		return accountRepository.findById(accountId)
+				.orElseThrow(()-> new AccountNotFoundException("Account Not Found"));
 	}
 }

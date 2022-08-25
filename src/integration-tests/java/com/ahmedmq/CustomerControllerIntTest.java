@@ -1,11 +1,14 @@
 package com.ahmedmq;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ahmedmq.account.Account;
+import com.ahmedmq.account.AccountRepository;
+import com.ahmedmq.account.AccountType;
 import com.ahmedmq.customer.Customer;
 import com.ahmedmq.customer.CustomerRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +29,8 @@ public class CustomerControllerIntTest {
 	@Autowired
 	CustomerRepository customerRepository;
 
-	@BeforeEach
-	void setup(){
-		customerRepository.deleteAll();
-	}
+	@Autowired
+	AccountRepository accountRepository;
 
 	@Test
 	void given_graphQL_endpoint_shouldReturnAllCustomers() {
@@ -44,7 +45,7 @@ public class CustomerControllerIntTest {
 							}
 				""";
 
-		customerRepository.save(new Customer(null, "Mark", "Wood"));
+		customerRepository.save(new Customer("Mark", "Wood"));
 
 		graphQlTester.document(document)
 				.execute()
@@ -85,5 +86,43 @@ public class CustomerControllerIntTest {
 
 				});
 
+	}
+
+	@Test
+	void given_graphql_endpoint_link_account_should_link_account_to_customer() {
+		String document = """
+     			mutation addAccount($customerId: Int, $accountId: Int){
+     				linkAccount(customerId: $customerId, accountId: $accountId){
+     					customerId
+     					firstName
+     					lastName
+     					accounts{
+     					  accountId
+     					  type
+     					  balance
+     					}
+     				}
+     			}
+				""";
+
+		Customer savedCustomer = customerRepository.save(new Customer("Mark", "Wood"));
+		Account savedAccount = accountRepository.save(new Account(AccountType.SAVINGS, BigDecimal.valueOf(0.0)));
+
+		graphQlTester.document(document)
+				.variable("customerId", savedCustomer.getCustomerId())
+				.variable("accountId", savedAccount.getAccountId())
+				.execute()
+				.path("linkAccount")
+				.entity(Customer.class)
+				.satisfies(c -> {
+					assertThat(c.getCustomerId()).isEqualTo(savedCustomer.getCustomerId());
+					assertThat(c.getFirstName()).isEqualTo("Mark");
+					assertThat(c.getLastName()).isEqualTo("Wood");
+					assertThat(c.getAccounts().size()).isEqualTo(1);
+					Account a = c.getAccounts().stream().findFirst().orElseGet(Account::new);
+					assertThat(a.getAccountId()).isEqualTo(savedAccount.getAccountId());
+					assertThat(a.getType()).isEqualTo(AccountType.SAVINGS);
+					assertThat(a.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
+				});
 	}
 }

@@ -1,10 +1,13 @@
 package com.ahmedmq;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.ahmedmq.transaction.Transaction;
+import com.ahmedmq.transaction.TransactionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,14 @@ public class TransactionControllerIntTest {
 
 	@Autowired
 	HttpGraphQlTester httpGraphQlTester;
+
+	@Autowired
+	TransactionRepository transactionRepository;
+
+	@BeforeEach
+	public void setup(){
+		transactionRepository.save(new Transaction(1,1,1,DEPOSIT,BigDecimal.valueOf(10.0), BigDecimal.valueOf(10.0),"Deposit", LocalDateTime.now()));
+	}
 
 	@Test
 	void should_Return_All_Transactions() {

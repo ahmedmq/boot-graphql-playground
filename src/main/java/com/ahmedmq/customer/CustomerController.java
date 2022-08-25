@@ -26,4 +26,9 @@ public class CustomerController {
 	public Customer createCustomer(@Argument CreateCustomerInput input){
 		return customerService.createCustomer(input);
 	}
+
+	@MutationMapping
+	public Customer linkAccount(@Argument Integer customerId, @Argument Integer accountId){
+		return customerService.linkAccount(customerId,accountId);
+	}
 }

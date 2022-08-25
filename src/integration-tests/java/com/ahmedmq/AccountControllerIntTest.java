@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.ahmedmq.account.Account;
 import com.ahmedmq.account.AccountRepository;
+import com.ahmedmq.customer.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,8 +28,12 @@ public class AccountControllerIntTest {
 	@Autowired
 	AccountRepository accountRepository;
 
+	@Autowired
+	CustomerRepository customerRepository;
+
 	@BeforeEach
 	public void setup(){
+		customerRepository.deleteAll();
 		accountRepository.deleteAll();
 	}
 
@@ -44,16 +49,16 @@ public class AccountControllerIntTest {
 				}
 				""";
 
-		accountRepository.save(new Account(null, SAVINGS, BigDecimal.valueOf(0.0)));
+		Account account = accountRepository.save(new Account(SAVINGS, BigDecimal.valueOf(0.0)));
 
 		httpGraphQlTester.document(document)
 				.execute()
 				.path("accounts[0]")
 				.entity(Account.class)
-				.satisfies(account -> {
-					assertThat(account.getAccountId()).isEqualTo(1);
-					assertThat(account.getType()).isEqualTo(SAVINGS);
-					assertThat(account.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
+				.satisfies(acc -> {
+					assertThat(acc.getAccountId()).isNotNull();
+					assertThat(acc.getType()).isEqualTo(SAVINGS);
+					assertThat(acc.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
 				});
 	}
 
@@ -69,6 +74,7 @@ public class AccountControllerIntTest {
     				}	
     			}
 				""";
+
 
 		Map<String, Object> input = new HashMap<>();
 		input.put("type", "SAVINGS");

@@ -2,37 +2,52 @@
 scalar DateTime
 scalar BigDecimal
 
+# The Customer holding a Bank Account
 type Customer {
 	 customerId: ID!
-	 firstName: String
-	 lastName: String
+	 firstName: String!
+	 lastName: String!
+	 accounts: [Account]
 }
 
+# The Bank Account Resource
 type Account {
 	accountId: ID!
-	type: AccountType
-	balance: BigDecimal
+	type: AccountType!
+	balance: BigDecimal!
+	customers: [Customer]
 }
 
+"""
+The transaction resource includes details of all transactions that have
+been made on a given account for a specific customer
+"""
 type Transaction {
    transactionId: ID!
-   accountId: Int
-   customerId: Int
-   type: TransactionType
-   amount: BigDecimal
-   balance: BigDecimal
+   accountId: Int!
+   customerId: Int!
+   type: TransactionType!
+   amount: BigDecimal!
+   balance: BigDecimal!
    description: String
-   transactionDateTime: String
+   transactionDateTime: String!
 }
 
 type Query {
-	 customers: [Customer]
-	 accounts: [Account]
-	 transactions(input: TransactionSearchInput): [Transaction]
+	# List all customers in the system.
+	customers: [Customer]
+	# List all accounts in the system.
+	accounts: [Account]
+	# List all transactions that satisfy the input criteria.
+	transactions(input: TransactionSearchInput): [Transaction]
 }
 
 type Mutation {
+	# Create a new customer in the system.
  	createCustomer(input: CreateCustomerInput): Customer
+ 	# Link an existing account to a customer
+ 	linkAccount(customerId: Int, accountId: Int): Customer
+ 	# Create a new account in the system.
  	createAccount(input: CreateAccountInput): Account
 }
 
@@ -59,7 +74,7 @@ enum TransactionType{
 }
 
 input CreateAccountInput {
-  type: AccountType
+  type: AccountType!
 }
 
 # GraphQL Schema

@@ -30,7 +30,7 @@ public class AccountControllerTest {
 	@MockBean
 	AccountService accountService;
 
-	Account TEST_ACCOUNT = new Account(1, SAVINGS, BigDecimal.valueOf(20.0));
+	Account TEST_ACCOUNT = new Account(SAVINGS, BigDecimal.valueOf(0.0));
 
 	@Test
 	void should_Return_All_Accounts() {
@@ -45,7 +45,7 @@ public class AccountControllerTest {
 				}
 				""";
 
-
+		TEST_ACCOUNT.setAccountId(1);
 		when(accountService.accounts()).thenReturn(List.of(TEST_ACCOUNT));
 
 		graphQlTester.document(document)
@@ -72,6 +72,7 @@ public class AccountControllerTest {
 		Map<String,Object> input = new HashMap<>();
 		input.put("type", TEST_ACCOUNT.getType());
 
+		TEST_ACCOUNT.setAccountId(1);
 		when(accountService.createAccount(any(CreateAccountInput.class))).thenReturn(TEST_ACCOUNT);
 
 		graphQlTester.document(document)
