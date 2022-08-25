@@ -38,7 +38,7 @@ public class CustomerControllerIntTest {
 		String document = """
 							query {
 							  customers {
-							    customerId
+							    id
 							    firstName
 							    lastName
 							    }
@@ -52,7 +52,7 @@ public class CustomerControllerIntTest {
 				.path("customers")
 				.entityList(Customer.class)
 				.satisfies(customer -> {
-					assertThat(customer.get(0).getCustomerId()).isEqualTo(1);
+					assertThat(customer.get(0).getId()).isEqualTo(1);
 					assertThat(customer.get(0).getFirstName()).isEqualTo("Mark");
 					assertThat(customer.get(0).getLastName()).isEqualTo("Wood");
 				});
@@ -64,7 +64,7 @@ public class CustomerControllerIntTest {
 		String document = """
     			mutation newCustomer($input: CreateCustomerInput){
     				createCustomer(input: $input){
-    					customerId
+    					id
     				}
     			}
 				""";
@@ -80,7 +80,7 @@ public class CustomerControllerIntTest {
 				.entity(Customer.class)
 				.satisfies(customer -> {
 					System.out.println(customer);
-					assertThat(customer.getCustomerId()).isNotNull();
+					assertThat(customer.getId()).isNotNull();
 					assertThat(customer.getFirstName()).isNull();
 					assertThat(customer.getLastName()).isNull();
 
@@ -93,11 +93,11 @@ public class CustomerControllerIntTest {
 		String document = """
      			mutation addAccount($customerId: Int, $accountId: Int){
      				linkAccount(customerId: $customerId, accountId: $accountId){
-     					customerId
+     					id
      					firstName
      					lastName
      					accounts{
-     					  accountId
+     					  id
      					  type
      					  balance
      					}
@@ -109,18 +109,18 @@ public class CustomerControllerIntTest {
 		Account savedAccount = accountRepository.save(new Account(AccountType.SAVINGS, BigDecimal.valueOf(0.0)));
 
 		graphQlTester.document(document)
-				.variable("customerId", savedCustomer.getCustomerId())
-				.variable("accountId", savedAccount.getAccountId())
+				.variable("customerId", savedCustomer.getId())
+				.variable("accountId", savedAccount.getId())
 				.execute()
 				.path("linkAccount")
 				.entity(Customer.class)
 				.satisfies(c -> {
-					assertThat(c.getCustomerId()).isEqualTo(savedCustomer.getCustomerId());
+					assertThat(c.getId()).isEqualTo(savedCustomer.getId());
 					assertThat(c.getFirstName()).isEqualTo("Mark");
 					assertThat(c.getLastName()).isEqualTo("Wood");
 					assertThat(c.getAccounts().size()).isEqualTo(1);
 					Account a = c.getAccounts().stream().findFirst().orElseGet(Account::new);
-					assertThat(a.getAccountId()).isEqualTo(savedAccount.getAccountId());
+					assertThat(a.getId()).isEqualTo(savedAccount.getId());
 					assertThat(a.getType()).isEqualTo(AccountType.SAVINGS);
 					assertThat(a.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
 				});

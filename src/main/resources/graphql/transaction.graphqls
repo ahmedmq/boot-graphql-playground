@@ -1,0 +1,36 @@
+extend type Query {
+	# List all transactions that satisfy the input criteria.
+    transactions(input: TransactionSearchInput): TransactionList
+}
+
+input TransactionSearchInput {
+   	accountId: Int
+   	customerId: Int
+   	currentPage: Int = 0
+   	pageSize: Int = 20
+}
+
+"""
+The transaction resource includes details of all transactions that have
+been made on a given account for a specific customer
+"""
+type Transaction implements Node{
+  	id : ID!
+   	accountId: Int!
+   	customerId: Int!
+   	type: TransactionType!
+   	amount: BigDecimal!
+   	balance: BigDecimal!
+   	description: String
+   	transactionDateTime: String!
+}
+
+type TransactionList implements PaginatedList {
+	items: [Transaction!]!
+    totalItems: Int!
+}
+
+enum TransactionType{
+ 	DEPOSIT,
+ 	WITHDRAW
+}

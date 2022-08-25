@@ -1,0 +1,12 @@
+# Third-party custom scalar types
+scalar DateTime
+scalar BigDecimal
+
+interface Node {
+    id: ID!
+}
+
+interface PaginatedList {
+    items: [Node!]!
+    totalItems: Int!
+}

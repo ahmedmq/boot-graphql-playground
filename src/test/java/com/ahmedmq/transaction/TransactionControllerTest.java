@@ -35,21 +35,24 @@ public class TransactionControllerTest {
 		String document = """
 							query getTransactions($input: TransactionSearchInput){
 							   transactions(input: $input) {
-							      transactionId
-							      accountId
-							      customerId
-							      type
-							      amount
-							      balance
-							      description
-							      transactionDateTime
+							      items {
+							       	id 
+							       	accountId
+								   	customerId
+								  	type
+								  	amount
+								  	balance
+								  	description
+								  	transactionDateTime
+							      }
+							      totalItems
 							  }
 							}      
 				""";
 
-		Transaction testTransaction = new Transaction(1, 1, 1, TransactionType.DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now());
+		Transaction testTransaction = new Transaction(1L, 1L, 1L, TransactionType.DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now());
 		when(transactionService.transactions(any()))
-				.thenReturn(List.of(testTransaction));
+				.thenReturn(new TransactionList(List.of(testTransaction), 1));
 
 		Map<String, Object> transactionSearchInput = new HashMap<>();
 		transactionSearchInput.put("accountId", 1);
@@ -59,10 +62,12 @@ public class TransactionControllerTest {
 		graphQlTester.document(document)
 				.variable("input", transactionSearchInput)
 				.execute()
-				.path("transactions[0]")
-				.entity(Transaction.class)
-				.satisfies(transaction -> {
-					assertThat(transaction).usingRecursiveComparison().isEqualTo(testTransaction);
+				.path("transactions")
+				.entity(TransactionList.class)
+				.satisfies(System.out::println)
+				.satisfies(t -> {
+					assertThat(t.getTotalItems()).isEqualTo(1);
+					assertThat(t.getItems().get(0)).usingRecursiveComparison().isEqualTo(testTransaction);
 				});
 
 	}

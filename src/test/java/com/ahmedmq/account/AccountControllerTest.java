@@ -38,14 +38,14 @@ public class AccountControllerTest {
 		String document = """
 				query {
 				   accounts {
-				     accountId
+				     id
 				     type
 				     balance
 				   }
 				}
 				""";
 
-		TEST_ACCOUNT.setAccountId(1);
+		TEST_ACCOUNT.setId(1L);
 		when(accountService.accounts()).thenReturn(List.of(TEST_ACCOUNT));
 
 		graphQlTester.document(document)
@@ -62,7 +62,7 @@ public class AccountControllerTest {
 		String document = """
     			mutation addAccount($input: CreateAccountInput){
     				createAccount(input: $input){
-    					accountId
+    					id
     					type
     					balance
     				}
@@ -72,7 +72,7 @@ public class AccountControllerTest {
 		Map<String,Object> input = new HashMap<>();
 		input.put("type", TEST_ACCOUNT.getType());
 
-		TEST_ACCOUNT.setAccountId(1);
+		TEST_ACCOUNT.setId(1L);
 		when(accountService.createAccount(any(CreateAccountInput.class))).thenReturn(TEST_ACCOUNT);
 
 		graphQlTester.document(document)
@@ -81,7 +81,7 @@ public class AccountControllerTest {
 				.path("createAccount")
 				.entity(Account.class)
 				.satisfies(account -> {
-					assertThat(account.getAccountId()).isNotNull();
+					assertThat(account.getId()).isNotNull();
 					assertThat(account.getBalance()).isEqualTo(TEST_ACCOUNT.getBalance());
 					assertThat(account.getType()).isEqualTo(TEST_ACCOUNT.getType());
 				});

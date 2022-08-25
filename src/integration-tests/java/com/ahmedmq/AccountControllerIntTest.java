@@ -42,7 +42,7 @@ public class AccountControllerIntTest {
 		String document = """
 				query {
 				   accounts {
-				     accountId
+				     id
 				     type
 				     balance
 				   }
@@ -56,7 +56,7 @@ public class AccountControllerIntTest {
 				.path("accounts[0]")
 				.entity(Account.class)
 				.satisfies(acc -> {
-					assertThat(acc.getAccountId()).isNotNull();
+					assertThat(acc.getId()).isNotNull();
 					assertThat(acc.getType()).isEqualTo(SAVINGS);
 					assertThat(acc.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
 				});
@@ -68,7 +68,7 @@ public class AccountControllerIntTest {
 		String document = """
     			mutation addAccount($createAccountInput: CreateAccountInput){
     				createAccount(input: $createAccountInput){
-    					accountId
+    					id
     					type
     					balance
     				}	
@@ -85,7 +85,7 @@ public class AccountControllerIntTest {
 				.path("createAccount")
 				.entity(Account.class)
 				.satisfies(account -> {
-					assertThat(account.getAccountId()).isNotNull();
+					assertThat(account.getId()).isNotNull();
 					assertThat(account.getBalance()).isEqualTo(BigDecimal.valueOf(0.0));
 					assertThat(account.getType()).isEqualTo(SAVINGS);
 				});

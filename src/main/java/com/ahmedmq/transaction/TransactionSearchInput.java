@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionSearchInput {
-	Integer customerId;
+	Long customerId;
 
-	Integer accountId;
+	Long accountId;
 
-	Integer page;
+	Integer currentPage;
 
 	Integer pageSize;
 }

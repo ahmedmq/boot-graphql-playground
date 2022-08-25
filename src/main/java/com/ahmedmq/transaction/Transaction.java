@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.ahmedmq.common.Node;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class Transaction implements Node {
 
 	@Id
 	@GeneratedValue
-	Integer transactionId;
+	Long id;
 
-	Integer accountId;
+	Long accountId;
 
-	Integer customerId;
+	Long customerId;
 
 	@Enumerated(EnumType.STRING)
 	TransactionType type;

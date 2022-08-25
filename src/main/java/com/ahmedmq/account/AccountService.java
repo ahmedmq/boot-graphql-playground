@@ -22,7 +22,7 @@ public class AccountService {
 		return accountRepository.save(new Account(input.getType(), BigDecimal.valueOf(0.0)));
 	}
 
-	public Account account(Integer accountId) throws AccountNotFoundException {
+	public Account account(Long accountId) throws AccountNotFoundException {
 		return accountRepository.findById(accountId)
 				.orElseThrow(()-> new AccountNotFoundException("Account Not Found"));
 	}

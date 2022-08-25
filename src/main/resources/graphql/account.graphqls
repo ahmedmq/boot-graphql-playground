@@ -1,0 +1,26 @@
+extend type Query {
+	# List all accounts in the system.
+    accounts: [Account]
+}
+
+extend type Mutation {
+	# Create a new account in the system.
+    createAccount(input: CreateAccountInput): Account
+}
+
+input CreateAccountInput {
+  	type: AccountType!
+}
+
+# The Bank Account Resource
+type Account implements Node {
+	id: ID!
+	type: AccountType!
+	balance: BigDecimal!
+	customers: [Customer]
+}
+
+enum AccountType {
+   	SAVINGS,
+   	CURRENT
+}

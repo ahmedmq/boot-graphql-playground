@@ -28,7 +28,7 @@ public class Account {
 	@Id
 	@GeneratedValue(generator = "account_sequence")
 	@SequenceGenerator(name = "account_sequence", sequenceName = "account_seq_id")
-	Integer accountId;
+	Long id;
 
 	@Enumerated(value = EnumType.STRING)
 	AccountType type;

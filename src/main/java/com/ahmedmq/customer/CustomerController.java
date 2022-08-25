@@ -28,7 +28,7 @@ public class CustomerController {
 	}
 
 	@MutationMapping
-	public Customer linkAccount(@Argument Integer customerId, @Argument Integer accountId){
+	public Customer linkAccount(@Argument Long customerId, @Argument Long accountId){
 		return customerService.linkAccount(customerId,accountId);
 	}
 }

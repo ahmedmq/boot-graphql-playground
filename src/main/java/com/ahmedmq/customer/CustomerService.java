@@ -23,7 +23,7 @@ public class CustomerService {
 		return customerRepository.save(new Customer(input.getFirstName(), input.getLastName()));
 	}
 
-	public Customer linkAccount(Integer customerId, Integer accountId) {
+	public Customer linkAccount(Long customerId, Long accountId) {
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 		Account account = accountService.account(accountId);

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ahmedmq.transaction.Transaction;
+import com.ahmedmq.transaction.TransactionList;
 import com.ahmedmq.transaction.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ public class TransactionControllerIntTest {
 
 	@BeforeEach
 	public void setup(){
-		transactionRepository.save(new Transaction(1,1,1,DEPOSIT,BigDecimal.valueOf(10.0), BigDecimal.valueOf(10.0),"Deposit", LocalDateTime.now()));
+		transactionRepository.save(new Transaction(1L,1L,1L,DEPOSIT,BigDecimal.valueOf(10.0), BigDecimal.valueOf(10.0),"Deposit", LocalDateTime.now()));
 	}
 
 	@Test
@@ -39,14 +40,17 @@ public class TransactionControllerIntTest {
 		String document = """
 							query getTransactions($input: TransactionSearchInput){
 							   transactions(input: $input) {
-							      transactionId
-							      accountId
-							      customerId
-							      type
-							      amount
-							      balance
-							      description
-							      transactionDateTime
+							      items {
+							       	id 
+							       	accountId
+								   	customerId
+								  	type
+								  	amount
+								  	balance
+								  	description
+								  	transactionDateTime
+							      }
+							      totalItems
 							  }
 							}      
 				""";
@@ -54,22 +58,22 @@ public class TransactionControllerIntTest {
 		Map<String, Object> transactionSearchInput = new HashMap<>();
 		transactionSearchInput.put("accountId", 1);
 		transactionSearchInput.put("customerId", null);
-		transactionSearchInput.put("page", 0);
+		transactionSearchInput.put("currentPage", 0);
 		transactionSearchInput.put("pageSize", 2);
 
 		httpGraphQlTester.document(document)
 				.variable("input", transactionSearchInput)
 				.execute()
-				.path("transactions[0]")
-				.entity(Transaction.class)
-				.satisfies(transaction -> {
-					assertThat(transaction.getTransactionId()).isEqualTo(1);
-					assertThat(transaction.getAccountId()).isEqualTo(1);
-					assertThat(transaction.getCustomerId()).isEqualTo(1);
-					assertThat(transaction.getType()).isEqualTo(DEPOSIT);
-					assertThat(transaction.getAmount()).isEqualTo(BigDecimal.valueOf(10.0));
-					assertThat(transaction.getBalance()).isEqualTo(BigDecimal.valueOf(10.0));
-					assertThat(transaction.getTransactionDateTime()).isNotNull();
+				.path("transactions")
+				.entity(TransactionList.class)
+				.satisfies(t -> {
+					assertThat(t.getItems().get(0).getId()).isEqualTo(1);
+					assertThat(t.getItems().get(0).getAccountId()).isEqualTo(1);
+					assertThat(t.getItems().get(0).getCustomerId()).isEqualTo(1);
+					assertThat(t.getItems().get(0).getType()).isEqualTo(DEPOSIT);
+					assertThat(t.getItems().get(0).getAmount()).isEqualTo(BigDecimal.valueOf(10.0));
+					assertThat(t.getItems().get(0).getBalance()).isEqualTo(BigDecimal.valueOf(10.0));
+					assertThat(t.getItems().get(0).getTransactionDateTime()).isNotNull();
 				});
 
 	}

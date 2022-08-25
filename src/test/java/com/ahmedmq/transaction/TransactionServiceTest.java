@@ -23,8 +23,8 @@ public class TransactionServiceTest {
 	public void setup(){
 		transactionRepository.deleteAll();
 		List<Transaction> transactions = List.of(
-				new Transaction(null, 1, 99, DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now()),
-				new Transaction(null, 99, 1, DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now())
+				new Transaction(null, 1L, 99L, DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now()),
+				new Transaction(null, 99L, 1L, DEPOSIT, BigDecimal.TEN, BigDecimal.TEN, "Deposit", LocalDateTime.now())
 		);
 		transactionRepository.saveAll(transactions);
 	}
@@ -32,24 +32,24 @@ public class TransactionServiceTest {
 	@Test
 	void shouldReturnTransactionsMatchingAccountIdWhenAccountIdIsOnlyProvided() {
 		TransactionService transactionService = new TransactionService(transactionRepository);
-		TransactionSearchInput transactionSearchInput = new TransactionSearchInput(99, 1, 0, 1);
-		List<Transaction> transactionList = transactionService.transactions(transactionSearchInput);
+		TransactionSearchInput transactionSearchInput = new TransactionSearchInput(99L, 1L, 0, 1);
+		TransactionList transactionList = transactionService.transactions(transactionSearchInput);
 
-		assertThat(transactionList.size()).isEqualTo(1);
-		assertThat(transactionList.get(0).getCustomerId()).isEqualTo(99);
-		assertThat(transactionList.get(0).getAccountId()).isEqualTo(1);
+		assertThat(transactionList.getItems().size()).isEqualTo(1);
+		assertThat(transactionList.getItems().get(0).getCustomerId()).isEqualTo(99);
+		assertThat(transactionList.getItems().get(0).getAccountId()).isEqualTo(1);
 
 	}
 
 	@Test
 	void shouldReturnTransactionsMatchingCustomerIdWhenCustomerIdIsOnlyProvided() {
 		TransactionService transactionService = new TransactionService(transactionRepository);
-		TransactionSearchInput transactionSearchInput = new TransactionSearchInput(1, 99, 0, 2);
-		List<Transaction> transactionList = transactionService.transactions(transactionSearchInput);
+		TransactionSearchInput transactionSearchInput = new TransactionSearchInput(1L, 99L, 0, 2);
+		TransactionList transactionList = transactionService.transactions(transactionSearchInput);
 
-		assertThat(transactionList.size()).isEqualTo(1);
-		assertThat(transactionList.get(0).getAccountId()).isEqualTo(99);
-		assertThat(transactionList.get(0).getCustomerId()).isEqualTo(1);
+		assertThat(transactionList.getItems().size()).isEqualTo(1);
+		assertThat(transactionList.getItems().get(0).getAccountId()).isEqualTo(99);
+		assertThat(transactionList.getItems().get(0).getCustomerId()).isEqualTo(1);
 
 	}
 
@@ -57,9 +57,9 @@ public class TransactionServiceTest {
 	void shouldReturnAllTransactionsWhenCustomerIdAndAccountIdIsNotProvided() {
 		TransactionService transactionService = new TransactionService(transactionRepository);
 		TransactionSearchInput transactionSearchInput = new TransactionSearchInput(null, null, 0, 2);
-		List<Transaction> transactionList = transactionService.transactions(transactionSearchInput);
+		TransactionList transactionList = transactionService.transactions(transactionSearchInput);
 
-		assertThat(transactionList.size()).isEqualTo(2);
+		assertThat(transactionList.getItems().size()).isEqualTo(2);
 
 	}
 
@@ -67,9 +67,9 @@ public class TransactionServiceTest {
 	void shouldReturnMultiPagedTransactionsWhenCustomerIdAndAccountIdIsNotProvided() {
 		TransactionService transactionService = new TransactionService(transactionRepository);
 		TransactionSearchInput transactionSearchInput = new TransactionSearchInput(null, null, 0, 1);
-		List<Transaction> transactionList = transactionService.transactions(transactionSearchInput);
+		TransactionList transactionList = transactionService.transactions(transactionSearchInput);
 
-		assertThat(transactionList.size()).isEqualTo(1);
+		assertThat(transactionList.getItems().size()).isEqualTo(1);
 
 	}
 

@@ -1,10 +1,10 @@
 package com.ahmedmq.transaction;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ public class TransactionService {
 
 	private final TransactionRepository transactionRepository;
 
-	public List<Transaction> transactions(TransactionSearchInput transactionSearchInput) {
-		PageRequest pageRequest = PageRequest.of(transactionSearchInput.getPage(),
+	public TransactionList transactions(TransactionSearchInput transactionSearchInput) {
+		PageRequest pageRequest = PageRequest.of(transactionSearchInput.getCurrentPage(),
 				transactionSearchInput.getPageSize());
-		return transactionRepository
-				.findAll(getSpecificationFromTransactionInput(transactionSearchInput), pageRequest)
-				.stream().collect(Collectors.toList());
+		Page<Transaction> transactionPage = transactionRepository
+				.findAll(getSpecificationFromTransactionInput(transactionSearchInput), pageRequest);
+		return new TransactionList(transactionPage.stream().collect(Collectors.toList()), (int) transactionPage.getTotalElements());
 	}
 
 	private Specification<Transaction> getSpecificationFromTransactionInput(TransactionSearchInput transactionSearchInput){

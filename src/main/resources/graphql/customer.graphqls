@@ -1,0 +1,25 @@
+type Query {
+	# List all customers in the system.
+	customers: [Customer]
+}
+
+type Mutation {
+	# Create a new customer in the system.
+ 	createCustomer(input: CreateCustomerInput): Customer
+ 	# Link an existing account to a customer
+ 	linkAccount(customerId: Int, accountId: Int): Customer
+}
+
+# Input type for creating a new customer
+input CreateCustomerInput {
+  	firstName: String!
+  	lastName: String!
+}
+
+# The Customer holding a Bank Account
+type Customer implements Node {
+	id: ID!
+	firstName: String!
+	lastName: String!
+	accounts: [Account]
+}

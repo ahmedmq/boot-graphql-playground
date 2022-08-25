@@ -28,7 +28,7 @@ public class Customer {
 	@Id
 	@GeneratedValue(generator = "customer_sequence")
 	@SequenceGenerator(name = "customer_sequence", sequenceName = "customer_seq_id")
-	Integer customerId;
+	Long id;
 	String firstName;
 	String lastName;
 
@@ -38,8 +38,8 @@ public class Customer {
 	})
 	@JoinTable(
 			name = "customer_accounts",
-			joinColumns = @JoinColumn(name = "cust_id"),
-			inverseJoinColumns = @JoinColumn(name = "acc_id")
+			joinColumns = @JoinColumn(name = "customer_id"),
+			inverseJoinColumns = @JoinColumn(name = "account_id")
 	)
 	Set<Account> accounts = new LinkedHashSet<>();
 
